@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bsod lol</title>
+    <style>
+        *{
+            transition: .3s cubic-bezier(0, .6, 0, 1);
+        }
+
+        body {
+            background: black;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        #b {
+            background-color: #0179da;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: none;
+        }
+
+        #main {
+            margin: 8vh 0 0 13vw;
+        }
+
+        #e {
+            font-size: 20vh;
+        }
+
+        #title {
+            margin-top: 2vh;
+            height: 20vh;
+            width: 50vw;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        #title, #procent {
+            font-size: 5vh;
+            font-weight: 100;
+        }
+
+        #procent {
+            margin: 5vh 0;
+        }
+
+        #qrcode {
+            float: left;
+            border: 1.04vh solid white;
+            background-color: transparent;
+        }
+
+        span {
+            font-size: 2vh;
+            line-height: 1.5;
+            margin-left: 20px;
+            display: inline-block;
+        }
+
+        #settings {
+            width: calc(80vw - 250px);
+            height: calc(60vh);
+            top: 20vh;
+            left: calc(10vw + 75px);
+            background-color: #0f0f0f;
+            filter: none;
+            position: absolute;
+            outline: 3px solid white;
+            border-radius: 50px;
+            box-shadow: 0 10px 0 white, 0 10px 2.3px hsl(0, 0%, 100%, 1), 0 0 4.59px hsl(0, 0%, 100%, 21.76), 0 10px 9.19px hsl(0, 0%, 100%, 10.88), 0 0 18.38px hsl(0, 0%, 100%, 5.44), 0 0 36.76px hsl(0, 0%, 100%, 2.72);
+            animation: sIn .6s;
+            display: none;
+            font-family: sans-serif;
+            padding: 0 50px;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            flex-direction: column;
+            align-items: center;
+            font-family: sans-serif !important;
+        }
+
+        #settingsContent {
+            overflow: auto;
+            width: calc(80vw - 200px);
+            height: calc(60vh);
+            align-items: center;
+        }
+
+        @media screen and (min-width: 1200px) {
+            #settings {
+                width: calc(60vw - 250px);
+                left: calc(20vw + 75px);
+            }
+            #settingsContent {
+                width: calc(60vw - 200px);
+            }
+        }
+
+        @keyframes sIn {
+            0% {transform: scale(0);}
+            100% {transform: scale(1);}
+        }
+
+        button {
+            background-color: #151515;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 15px;
+            transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #x {
+            position: absolute;
+            right: 2vw;
+            top: 3vh;
+        }
+
+        #c {
+            position: absolute;
+            left: 2vw;
+            top: 3vh;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+            background-color: #252525;
+        }
+
+        button:active {
+            transform: scale(.9);
+            background-color: #404040;
+        }
+
+        input, textarea {
+            background-color: #151515 !important;
+            color: white !important;
+            border: none;
+            padding: 10px;
+            font-size: 15px !important;
+            margin: 10px;
+            height: 25px !important;
+            width: 200px !important;
+            outline: none;
+            box-shadow: 0 1px rgb(61, 61, 61);
+        }
+
+        input[type="text"], textarea, input[type="number"] {
+            width: calc(70% - 100px) !important;
+            border-radius: 10px;
+        }
+        
+        input[type="text"]:hover, textarea:hover, input[type="number"]:hover {
+            transform: scale(1.02);
+            background-color: #242424 !important;
+        }
+
+        input[type="text"]:focus, textarea:focus, input[type="number"]:focus {
+            box-shadow: 0 2px rgb(161, 161, 161);
+            background-color: #222222 !important;
+            outline: 1px solid rgb(172, 172, 172);
+        }
+
+        input[type="text"]:active, textarea:active, input[type="number"]:active {
+            transform: scale(.98);
+            background-color: #292929 !important;
+        }
+
+        textarea {
+            resize: none;
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+            height: 100px !important;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px !important;
+        }
+
+        #nti {
+            overflow: hidden;
+            display: inline;
+        }
+
+        #color {
+            width: calc(50% - 169px) !important;
+            min-width: 30px;
+            height: 40px !important;
+            cursor: pointer;
+            padding: 1px 3px !important;
+            transform: translateY(10px);
+            border-radius: 3px;
+            background-color: rgb(0, 0, 0) !important;
+        }
+
+        /* width */
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+        background: #353535;
+        border-radius: 100px;
+        margin: 40px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 100px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+        background: #afafaf;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="b">
+    <div id="main">
+        <div id="e">:&#40;</div>
+        <div id="title">ur pc meowmeow restart plsplspls uwu</div>
+
+        <div id="procent">0% complete</div>
+
+        <div id="qrcode" alt="qrcode"></div> <span id="textNextToQR">nie masz psychy zeskanowac <br> lol <br><br> stopcode: meow </span>
+    </div>
+    </div>
+    
+    <div id="settings">
+        <button id="x" onclick="stHide()">X</button>
+        <button id="c" onclick="clearLC()">Reset all</button>
+        <h1>settings</h1>
+        <div id="settingsContent">
+            <div id="nti">
+                <label for="color" style="display: inline;">Background color</label>
+                <input type="color" id="color" value="#0179da" onchange="colorChange()">
+                <button onclick="colorReset()">reset</button>
+            </div>
+            <div>
+                <label for="titleC">BSOD Title</label>
+                <input type="text" id="titleC" value="" placeholder="random">
+            </div>
+            <div>
+                <label for="emoji">Emoji symbol</label>
+                <input type="text" id="emoji" value=":&#40;" placeholder=":&#40;">
+            </div>
+            <div>
+                <label for="qrctxt" style="transform: translateY(-60px);">QR code text</label> <!-- to fix (im prolly not gonna fix that anyway XD) -->
+                <textarea rows="4" type="text" id="qrctxt" placeholder="default">nie masz psychy zeskanowac&#13;&#10;lol&#13;&#10;&#13;&#10;stopcode: meow</textarea>
+            </div>
+            <div>
+                <label for="pSpeed">Speed of %'s</label>
+                <input type="number" id="pSpeed" value="200" placeholder="0">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        const qrTexts = [
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Rickroll
+            "https://www.youtube.com/watch?v=Coa0Goj9UuA", // barka
+            "a jednak mial psyche noway",
+            "uwu",
+            "PC down. Restart? Maybe.",
+            "Have you tried turning it off?",
+            "Ctrl+Alt+Del: The usual.",
+            "Error: Try dancing?",
+            "Just reboot. You'll be fine.",
+            "Solution: Turn it off, walk away.",
+            "Send it to tech support.",
+            "Magic fix: Pray to the Wi-Fi gods.",
+            "It's not broken, it's 'fine'.",
+            "Your files are... where?",
+            "Error 123: Not your fault.",
+            "Turn it off, cry, reboot.",
+            "Restart: The ultimate fix.",
+            "Solution: Reboot & pray.",
+            "Don’t touch the keyboard.",
+            "Turn it off. For now.",
+            "Your computer is thinking... too much.",
+            "Reboot. No questions asked.",
+            "Error: Computer too tired.",
+            "PC timeout. Try again later.",
+            "Fatal error: Call mom.",
+            "Tech support? Run away first.",
+            "It’s a mystery. Reboot it.",
+            "Just restart. Seriously.",
+            "Too much stress, just restart.",
+            "Help? Maybe reboot first.",
+            "Solution: You didn’t save.",
+            "Do you believe in magic?",
+            "Critical error: Bye bye.",
+            "Reboot it like you mean it.",
+            "Is it broken? Maybe.",
+            "Your computer needs therapy.",
+            "Reset, hope, repeat.",
+            "Error: Try screaming.",
+            "Error 999: Cry softly.",
+            "Restart. It’ll solve everything.",
+            "Solution: Close your eyes.",
+            "Reboot now or never.",
+            "Turn it off, breathe.",
+            "Your files are on vacation.",
+            "Solution: Randomly press keys.",
+            "Restart and say a prayer.",
+            "Your computer quit. Restart?",
+            "Just press reset.",
+            "Who needs updates anyway?",
+            "Solution: Turn it off, then back on.",
+            "Rebooting: Good luck!",
+            "Computer is in time-out.",
+            "It’s broken. Try rebooting.",
+            "Your files are probably fine.",
+            "Solution: Close all tabs.",
+            "Don’t worry, reboot fixes all.",
+            "Problem: Too many tabs.",
+            "PC meltdown. Restart?",
+            "Warning: The computer is tired.",
+            "Solution: Give it a break.",
+            "Solution: Close eyes, reboot.",
+            "Error: Please scream louder.",
+            "Reboot. We hope it helps.",
+            "PC needs a nap.",
+            "Try the ol' reboot trick.",
+            "Solution: Refresh your luck.",
+            "PC’s on vacation. Come back later.",
+            "Solution: Turn off, maybe dance?",
+            "Error: Too much Wi-Fi.",
+            "Rebooting: Think good thoughts.",
+            "Don’t ask questions. Just reboot.",
+            "Solution: Turn off and walk away.",
+            "PC on strike. Try later.",
+            "Press F5 to pray.",
+            "Reboot. It always works.",
+            "Solution: Leave it alone.",
+            "Critical failure. Try rebooting.",
+            "PC timeout: Try later.",
+            "Error: Life is hard.",
+            "It’s all fine, just reboot.",
+            "Solution: Restart and hope.",
+            "Error: The Wi-Fi is tired.",
+            "Reboot. It’s the secret.",
+            "Solution: Don’t panic. Yet.",
+            "Error: The coffee broke.",
+            "Reboot: It’s your only hope.",
+            "Solution: Turn off, try again.",
+            "PC meltdown. Wait it out.",
+            "Solution: Close eyes and reboot.",
+            "Reboot. It fixes everything.",
+            "Solution: Restart and try again.",
+            "Turn it off, turn it on.",
+            "PC error: Your turn to fix.",
+            "Solution: Just wait for a miracle.",
+            "Try unplugging it for a minute.",
+            "Solution: Breathe, reboot.",
+            "Solution: Restart. Trust us.",
+            "It’s reboot o’clock.",
+            "Solution: Just restart. Seriously.",
+            "PC is taking a nap.",
+            "Solution: Hope for a reboot miracle.",
+            "Press reset, take a deep breath.",
+            "Solution: Close your eyes, reboot.",
+            "Reboot or give up.",
+            "Solution: Wait. Then reboot.",
+            "You broke it. Sorry.",
+            "Solution: Leave it alone.",
+            "PC is having feelings. Reboot.",
+            "Solution: Take a break, restart.",
+            "Rebooting fixes everything.",
+            "Solution: Try again later.",
+            "Solution: PC just needs space.",
+            "Error: It’s not your fault.",
+            "Solution: Try the old reboot trick.",
+            "PC thinks, reboot helps.",
+            "Solution: Just press restart."
+        ];
+
+        const bsodTitles = [
+            "ur pc meowmeow \n restart plsplspls \nuwu",
+            "System Error: Unplug it and hope for the best.",
+            "Error: You've encountered your daily dose of chaos.",
+            "Warning: Computer in a mood.",
+            "System Failure: This is what happens when you use Windows.",
+            "Fatal Error: Your computer has filed for retirement.",
+            "Critical error: Your system is just like you—confused.",
+            "Windows has decided it needs a nap.",
+            "Your computer has taken an emotional leave.",
+            "Critical error: System crash. Please cry quietly.",
+            "Oops, your PC is throwing a tantrum.",
+            "Error 404: PC not found.",
+            "System crash: Pretend it’s not happening.",
+            "Your computer is now in deep thought.",
+            "Fatal system error: Do you feel lucky?",
+            "Oops, you broke it. Sorry, not sorry.",
+            "This is awkward. Let's pretend it didn’t happen.",
+            "System Error: Time to panic.",
+            "System crash: Don’t worry, we’ve got this.",
+            "Warning: Time to reboot or not.",
+            "Error 99: Too much information for the CPU.",
+            "Your computer is having a private meltdown.",
+            "System crash: You can try to fix it… but why?",
+            "Windows 95 called, they want their error back.",
+            "Your computer is emotionally unavailable.",
+            "Your computer has a meltdown. Literally.",
+            "Oops! Something went wrong… like everything.",
+            "Error: I’m not mad, I’m just disappointed.",
+            "Error 503: Don’t panic.",
+            "Please wait, your computer is contemplating its life choices.",
+            "Error 405: Too much caffeine.",
+            "BSOD: Bye, Felicia!",
+            "Your system just left you on read.",
+            "Your PC has gone on strike.",
+            "System crashed: Everything is fine.",
+            "System error: This is your fault.",
+            "Please don’t panic. Oh wait, panic is allowed."
+        ];
+
+        function handleInputWithLocalStorage(inputId, action) {
+            const inputElement = document.getElementById(inputId);
+
+            if (!inputElement) {
+                console.error(`Input element with ID "${inputId}" not found.`);
+                return;
+            }
+
+            // Load saved value from local storage on page load
+            const savedValue = localStorage.getItem(inputId);
+            if (savedValue !== null && savedValue !== '') {
+                inputElement.value = savedValue;
+            }
+
+            // Listen for input events
+            inputElement.addEventListener("input", (event) => {
+                const value = event.target.value;
+                localStorage.setItem(inputId, value); // Save value to local storage
+                action(value); // Perform the provided action
+            });
+            window.addEventListener("load", (event) => {
+                if (savedValue !== null && savedValue !== '') {
+                    action(savedValue); // Perform the provided action on page load
+                }
+            });
+        }
+
+        handleInputWithLocalStorage("titleC", (value) => {
+            document.getElementById("title").textContent = value;
+        });
+        if(localStorage.getItem(titleC) == null || localStorage.getItem(titleC) == '') {
+            document.getElementById("title").textContent = bsodTitles[Math.floor(Math.random() * bsodTitles.length)];
+        }
+
+        handleInputWithLocalStorage("emoji", (value) => {
+            document.getElementById("e").textContent = value;
+        });
+
+        handleInputWithLocalStorage("qrctxt", (value) => {
+            document.getElementById("textNextToQR").innerHTML = value.replace(/\n/g, "<br>");;
+        });
+
+        handleInputWithLocalStorage("pSpeed", (value) => {
+            clearInterval(incrPr);
+            icSpeed = value; // still to fix in line 572 to make it work properly
+            setInterval(incrPr, icSpeed);
+        });
+        
+        triggerOnKeyCombination(() => {
+            stShow(1);
+        }, 'settings', 500);
+
+        triggerOnKeyCombination(() => {
+            document.getElementById('e').textContent=`;3`;
+        }, 'meow', 500);
+
+        triggerOnKeyCombination(() => {
+            setInterval(() => {
+                document.getElementById('b').style.backgroundColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`;
+            }, 200)
+        }, 'crazy', 500);
+
+        
+        var pageHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+        // Declare qrcode variable outside the block
+        let qrcode;
+
+        let textToEncode = qrTexts[Math.floor(Math.random() * qrTexts.length)];
+        try {
+            // Initialize qrcode
+            qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: textToEncode,
+                width: pageHeight / 9.6,
+                height: pageHeight / 9.6,
+                colorDark: localStorage.getItem('color'),
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M // Medium error correction
+            });
+
+            console.log(`QR Code generated for text: "${textToEncode}"`);
+
+        } catch (error) {
+            if (error.message.includes("code length overflow")) {
+                console.error(`QR Code generation failed due to text length overflow. Text: "${textToEncode}"`);
+                
+                // Clear the QR code container manually
+                const qrContainer = document.getElementById("qrcode");
+                qrContainer.innerHTML = ""; // Clear existing QR code content
+
+                // Use a shorter fallback text to generate a new QR code
+                let fallbackText = "Fallback: Scan again.";
+                qrcode = new QRCode(qrContainer, {
+                    text: fallbackText,
+                    width: pageHeight / 9.6,
+                    height: pageHeight / 9.6,
+                    colorDark: localStorage.getItem('color'),
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M // Medium error correction
+                });
+                console.log(`Fallback QR Code generated with text: "${fallbackText}"`);
+            } else {
+                // Log other unexpected errors
+                console.error("An unexpected error occurred:", error);
+            }
+        }
+
+
+
+        window.addEventListener("resize", () => {
+            qrResize();
+        });
+
+        function qrResize() {
+            pageHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            const qrSize = pageHeight / 9.6; // Calculate the size based on page height
+            
+            // Update QR code size
+            const qrElement = document.querySelector('#qrcode'); // Assuming the QR code element has id 'qrcode'
+            if (qrElement) {
+                qrElement.innerHTML = ""; // Clear the existing QR code
+                qrcode = new QRCode(qrElement, {
+                    text: qrcode._oDrawing._el.title, // Use the existing QR code text
+                    width: qrSize,
+                    height: qrSize,
+                    colorDark: localStorage.getItem('color'),
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.L
+                });
+            }
+        }
+        setTimeout(() => qrResize(), 0) // cuz resetting localstorage makes it disappear
+
+
+        const procent = document.getElementById("procent");
+
+        document.getElementById('qrcode').ondragstart = function() { return false; };
+
+
+        var icSpeed = 200; // need to add an if or smth later
+        setInterval(incrPr, icSpeed);
+
+        let currentProcent = 0;
+        function incrPr() {
+
+            if(Math.random()>currentProcent/100 && currentProcent<=100) {
+                currentProcent += 1;
+                changeProcent(currentProcent);
+            }
+
+            if(currentProcent==100&&Math.random()>.99) {
+                changeProcent(101);
+                currentProcent=101;
+                document.getElementById('title').textContent = `lol`;
+                setTimeout(() => {
+                    changeProcent(0);
+                    currentProcent=0;
+                    document.getElementById('title').textContent = bsodTitles[Math.floor(Math.random() * bsodTitles.length)];
+                    qrcode.clear();
+                    qrcode.makeCode(qrTexts[Math.floor(Math.random()*qrTexts.length)]);
+                }, 3500)
+            }
+        }
+
+        function changeProcent(p) {
+            procent.textContent = `${p}% complete`;
+        }
+
+        function triggerOnKeyCombination(targetFunction, keyCombination, delay) {
+            let keySequence = [];
+            let lastKeyPressTime = Date.now();
+
+            document.addEventListener('keydown', (event) => {
+                const currentTime = Date.now();
+
+                if (currentTime - lastKeyPressTime > delay) {
+                    keySequence = [];
+                }
+
+                keySequence.push(event.key);
+                lastKeyPressTime = currentTime;
+
+                if (keySequence.join('') === keyCombination && window.location.hash !== `#settings`) {
+                    targetFunction();
+                    keySequence = [];
+                }
+            });
+        }
+
+        
+        if(window.location.hash==`#settings`) {
+            stShow(0);
+        }
+
+        function stShow(anim) {
+            if(anim==1) {
+                document.getElementById("settings").style.animation = `sIn .3s cubic-bezier(.2,1.48,.43,1)`;
+            } else {
+                document.getElementById("settings").style.animation = "none";
+            }
+            document.getElementById("b").style.filter = `blur(4px)`;
+            document.getElementById("b").style.opacity = `60%`;
+            document.getElementById("b").style.cursor = `default`;
+            document.getElementById("settings").style.display = `flex`;
+            window.location.hash=`#settings`;
+        }
+
+
+        function removeHash () { 
+            history.pushState("", document.title, window.location.pathname
+                                                            + window.location.search);
+        }
+
+        function stHide() {
+            document.getElementById("settings").style.animation = "none";
+            void document.getElementById("settings").offsetWidth;
+            document.getElementById("settings").style.animation = "";
+            document.getElementById("settings").style.animation = `sIn .3s cubic-bezier(.9,0,.1,1) reverse`
+            setTimeout(() => {
+                document.getElementById("settings").style.display = `none`
+                document.getElementById("b").style.filter = `blur(0)`;
+                document.getElementById("b").style.cursor = `none`;
+            document.getElementById("b").style.opacity = `100%`;
+                removeHash();
+            }, 300)
+        }
+        
+        function clearLC() {
+            localStorage.clear();
+            window.location.reload();
+        }
+
+        function colorChange() {
+            colorInput = document.getElementById('color');
+            localStorage.setItem('color', color.value);
+            updateColor();
+            qrResize();
+        }
+
+        function colorReset() {
+            localStorage.setItem('color', `#0179da`);
+            updateColor();
+            qrResize();
+        }
+
+        function updateColor() {
+            if(localStorage.getItem('color')) {
+                document.getElementById('b').style.backgroundColor = localStorage.getItem('color');
+                document.getElementById('color').value = localStorage.getItem('color');
+            }
+        }
+        
+        if(!localStorage.getItem('color')) {
+            localStorage.setItem('color', `#0179da`);
+        }
+        updateColor();
+    </script>
+</body>
+</html>
