@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kalkulator</title>
+
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/noah-grotesque');
+        @import url('https://fonts.cdnfonts.com/css/seven-segment');
+
+        * {
+            font-family: 'Noah Grotesque', sans-serif;
+        }
+        
+        body {
+            background: #151515;
+            color: white;
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+        
+        .sect {
+            position: absolute;
+            left: 0; 
+            right: 0; 
+            margin-inline: auto;
+            width: fit-content;
+            align-items: center;
+            animation: none 2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes incontent{
+            0% {transform: translateY(100%) rotate(50deg);}
+        }
+
+        #credits {
+            font-size: 10px;
+            position: absolute;
+            bottom: 2vh;
+            right: 1vw;
+            background-color: white;
+            border-radius: 100px;
+            padding: 3px;
+            width: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            border: 1px solid white;
+            transition: .3s cubic-bezier(.98,-0.64,.1,1.63);
+        }
+
+        #credits:hover {
+            background-color: #202020;
+            width: 80px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 15vh;
+            font-size: 50px;
+            text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 8px #fff, 0 0 16px #fff, 0 0 32px #fff;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+
+        #Calc {
+            width: calc(50vw + 200px);
+            align-items: center;
+            margin: auto;
+            text-align: center;
+        }
+
+
+        #calcInput {
+            display: block;
+            position: relative;
+            right: 1vw;
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            text-align: right;
+            color: white;
+            text-shadow: 0 0 1.74px rgba(255, 255, 255, 0.09), 0 0 3.48px rgba(255, 255, 255, 2.5), 0 0 6.96px rgba(255, 255, 255, 1.25), 0 0 13.93px rgba(255, 255, 255, 0.62);
+            font-size: 400%;
+            font-family: 'Seven Segment', sans-serif;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #calcInput::placeholder {
+            color: white;
+        }
+
+        .writePop {
+            animation: writePop .15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .slicePop {
+            animation: slicePop .15s ease-in-out;
+        }
+
+        @keyframes writePop {
+            0% {right: -10px;}
+            100% {right: 1vw;}
+        }
+        
+        @keyframes slicePop {
+            0% {right: 2vw;}
+            10% {right: -1px;}
+            100% {right: 1vw;}
+        }
+
+        @keyframes ICtransition {
+            0% {transform: translateY(0%);}
+            50% {transform: translateY(-75%);}
+            51% {transform: translateY(75%);}
+            100% {transform: translateY(0%);}
+        }
+
+        @keyframes statePopIn {
+            0% {left: -25px;}
+            100% {left: 1%;}
+        }
+        @keyframes statePopOut {
+            0% {left: 1%;}
+            100% {left: -25px;}
+        }
+        @keyframes errorAnim {
+            0% {transform: translateX(-2vw); border-color: rgb(255, 0, 0)}
+            12% {transform: translateX(2vw);}
+            24% {transform: translateX(-1.5vw); border-color: rgb(255, 46, 46)}
+            36% {transform: translateX(1vw);}
+            48% {transform: translateX(-.7vw);}
+            60% {transform: translateX(.3vw);}
+            72% {transform: translateX(-.1vw); border-color: rgb(255, 217, 217)}
+            84% {transform: translateX(.1vw);}
+            100% {transform: translateX(0vw); border-color: rgb(255, 255, 255)}
+        }
+
+
+        #calcInputContainer {
+            margin: auto;
+            background-color: black;
+            width: 49%;
+            height: 10vh;
+            border: 2px solid white;
+            border-radius: 1vh;
+            clip-path: inset(0% 0%);
+            transition: .1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        #calcInputContainer:active {
+            width: 47.5%;
+        } 
+
+        .calcButton {
+            color: white;
+            width: 12%;
+            height: 7vh;
+            margin: .2vh 0;
+            background: radial-gradient(#333333 10%, #000000 90%);
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e2e2e2, 0 0 40px #dbdbdb;
+            font-size: 160%;
+            transition: .2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 1vh;
+            border: 2px outset;
+        }
+
+        .calcButton:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e2e2e2, 0 0 40px #dbdbdb;
+        }
+        
+        .calcButton:active {
+            transform: scale(.9);
+        }
+
+        #eql {
+            filter: invert(100%);
+            background: radial-gradient(#303030, #000000, #6e6e6e);
+            box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.459);
+        }
+
+        #C {     
+            background: radial-gradient(#af0202 10%, #000000 90%);
+        }
+        
+        .cNumB {
+            background-color: #202020;
+        }
+
+        #calcState {
+            position: absolute;
+            top: 30%;
+            left: 1%;
+            font-family: 'Seven Segment', sans-serif;
+            font-size: 200%;
+            text-shadow: 0 0 10px black, 0 0 10px black, 0 0 10px black;
+        }
+
+
+        #error {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="in"></div>
+
+    <span id="credits">made by: tymon 2at</span>
+
+
+    <div id="Calc" class="sect">
+        <h1>kalkulator</h1>
+
+        <div id="calcInputContainer"><input type="number" placeholder="0" id="calcInput"><span id="calcState"></span></div>
+        <button class="calcButton" id="C">C</button>
+        <button class="calcButton" id="F"><i>Fₙ</i></button>
+        <button class="calcButton" id="silnia">!</button>
+        <button class="calcButton" id="backspace">←</button>
+        <br>
+        <button class="calcButton" id="pwr">x²</button>
+        <button class="calcButton" id="sqrt">√</button>
+        <button class="calcButton" id="log">log</button>
+        <button class="calcButton" id="divide">:</button>
+        <br>
+        <button class="calcButton cNumB" id="7">7</button>
+        <button class="calcButton cNumB" id="8">8</button>
+        <button class="calcButton cNumB" id="9">9</button>
+        <button class="calcButton" id="multiply">x</button>
+        <br>
+        <button class="calcButton cNumB" id="4">4</button>
+        <button class="calcButton cNumB" id="5">5</button>
+        <button class="calcButton cNumB" id="6">6</button>
+        <button class="calcButton" id="minus">-</button>
+        <br>
+        <button class="calcButton cNumB" id="1">1</button>
+        <button class="calcButton cNumB" id="2">2</button>
+        <button class="calcButton cNumB" id="3">3</button>
+        <button class="calcButton" id="plus">+</button>
+        <br>
+        <button class="calcButton" id="pm">+/-</button>
+        <button class="calcButton cNumB" id="0">0</button>
+        <button class="calcButton" id="comma">.</button>
+        <button class="calcButton" id="eql">=</button>
+    </div>
+    
+
+    <script>
+        const calcInput = document.getElementById("calcInput");
+        let calcInputOverwrite = false;
+
+
+        // funkcje animacji
+
+        function inAnim() { // animacja podczas pisania w polu tekstowym
+            calcInput.style.animation = "none";
+            void calcInput.offsetWidth;
+            calcInput.style.animation = "";
+            calcInput.classList.add("writePop");
+            changeInputFontSize(); // liczy na nowo po zmianie inputu
+            //calcInput.value = Number(calcInput.value);
+        }
+
+        function switchAnim() { // animacja przejścia (np po kliknięciu =)
+            calcInput.style.animation = "none";
+            void calcInput.offsetWidth;
+            calcInput.style.animation = "";
+            calcInput.style.animation = `ICtransition .3s cubic-bezier(.98,-0.64,.1,1.63)`
+            setTimeout(() => changeInputFontSize(), 155) // liczy na nowo po zmianie inputu
+        }
+                
+        function inAnimS() { // wejście symbolu działania z lewej strony "wyświetlacza"
+            calcSt.style.animation = "none";
+            void calcSt.offsetWidth;
+            calcSt.style.animation = "";
+            calcSt.style.animation = "statePopIn .15s cubic-bezier(0.34, 1.56, 0.64, 1)";
+            calcInput.placeholder = "";
+        }
+        
+        function outAnimS() { // wyjście symbolu działania z lewej strony "wyświetlacza"
+            calcSt.style.animation = "none";
+            void calcSt.offsetWidth;
+            calcSt.style.animation = "";
+            calcSt.style.animation = "statePopOut .15s cubic-bezier(.98,-0.64,.1,1.63)";
+            setTimeout(() => calcInput.placeholder = "0", 150)
+        }
+
+
+        
+        //dostosowywanie sie wielkosci czcionki
+        let inputWidth = 0;
+        let inputWidthBefore = 0;
+        let inContW = document.getElementById('calcInputContainer').getBoundingClientRect().width;
+        let inFontS = Number(window.getComputedStyle(calcInput, null).getPropertyValue('font-size').slice(0, -2));
+        let inDefaultFontS = Number(window.getComputedStyle(calcInput, null).getPropertyValue('font-size').slice(0, -2));
+        let iDigits = {};
+        function determineInputWidth() { //oblicza na oko szerokosc value zeby sie dalo wielkosc czcionki dostosowac
+            inputWidth = 0;
+            inContW = document.getElementById('calcInputContainer').getBoundingClientRect().width;
+            inFontS = Number(window.getComputedStyle(calcInput, null).getPropertyValue('font-size').slice(0, -2));
+
+            if(calcInput.value==""){
+                iDigits = calcInput.placeholder.toString().split('');
+            } else {
+                iDigits = calcInput.value.toString().split('');
+            }
+
+            iDigits.forEach(digit => {
+            if (digit === '1') {
+                inputWidth += 0.36;
+            } else {
+                inputWidth += 1;
+            }
+            });
+            inputWidth *= 0.53; //font size to width correctio  n
+            inputWidthBefore = inputWidth;
+            inputWidth *= inFontS;
+        }
+
+        function changeInputFontSize() {
+            determineInputWidth();
+            calcInput.style.fontSize = `${Math.min(inContW/inputWidthBefore, 64)}px`
+        }
+
+        
+
+        //walidacjowe funkcje
+        const cic = document.getElementById('calcInputContainer'); //i tak tego tylko tu uzywam wiec `cic` bedzie git XD
+        let erRN = false;
+        function validation(reason) {
+            cic.style.animation = "none";
+            void cic.offsetWidth;
+            cic.style.animation = "";
+            cic.style.animation = `errorAnim .6s`;
+            switchAnim();
+            outAnimS()
+            calcState = "";
+            setTimeout(() => calcSt.textContent = "", 150)
+            setTimeout(() => calcInput.value = "", 100)
+
+            setTimeout(() => calcInput.placeholder = `0`, 2000)
+            setTimeout(() => {if(calcInput.value==""&&erRN==true){switchAnim();erRN=false}}, 1850)
+
+            erRN=true;
+            switch(reason){
+                case "0":
+                    setTimeout(() => calcInput.placeholder = `nie dziel przez 0 lol`, 150)
+                    return;
+                case "-":
+                    setTimeout(() => calcInput.placeholder = `pierwiastek z ujemnej liczby XD?`, 150)
+                    return;
+                case "empty":
+                    setTimeout(() => calcInput.placeholder = `wpisz cos moze najpierw`, 150)
+                    return;
+                case "limit":
+                    setTimeout(() => calcInput.placeholder = `za duza liczba`, 150)
+                    return;
+                case "fibonacci":
+                    setTimeout(() => calcInput.placeholder = `tylko nieujemne integery mozna`, 150)
+                    return;
+                default:
+                    setTimeout(() => calcInput.placeholder = `error`, 150)
+                    return;
+            }
+        }
+
+
+
+
+        calcInput.oninput = function () {
+            if(calcInputOverwrite) {
+                let inputt = calcInput.value.slice(-1);
+                setTimeout(() => calcInput.value = inputt, 10)
+                calcInputOverwrite = false;
+            } 
+            inAnim(); //dodaje animacje przy inpucie
+            
+        }
+
+        calcInput.addEventListener("animationend", () => { // usuwanie klasy animacji użytych w inAnim i backspace
+            calcInput.classList.remove("writePop");
+            calcInput.classList.remove("slicePop");
+        });
+
+
+
+
+
+        // definicja akcji przyciskow kalkulatora
+        
+        function calcBF(num) { //dodaje funkcjonalnosc przyciskow 0-9
+            document.getElementById(num).addEventListener('click', () => {
+                if(calcInputOverwrite) {
+                    calcInput.value = "";
+                    calcInputOverwrite = false;
+                }
+                if (!addComma) {
+                    calcInput.value += num;
+                    inAnim();
+                } else {
+                    if(calcInput.value<1 && calcInput.value>-1) {
+                        calcInput.value += '0.' + num;
+                    } else {
+                        calcInput.value += '.' + num;
+                    }
+                    addComma = false;
+                    inAnim();
+                }
+            });
+        }
+
+        for (let i = 0; i <= 9; i++) {
+            calcBF(i);
+        }
+
+
+        let firstValue = 0;
+        let calcState = "";
+        const calcSt = document.getElementById('calcState');
+
+        function equal(n=false) {
+            if(!calcInput.value) {
+                validation("empty");
+                return;
+            }
+            if(n) {
+                switchAnim();
+                if(calcState=="addition") {
+                    setTimeout(() => calcInput.value = Number(firstValue) + Number(calcInput.value), 150)
+                } else if(calcState=="substract") {
+                    setTimeout(() => calcInput.value = Number(firstValue) - Number(calcInput.value), 150)
+                } else if(calcState=="multiply") {
+                    setTimeout(() => calcInput.value = Number(firstValue) * Number(calcInput.value), 150)
+                } else if(calcState=="divide") {
+                    if(Number(calcInput.value)==0) {
+                        validation("0");
+                        return;
+                    }
+                    setTimeout(() => calcInput.value = Number(firstValue) / Number(calcInput.value), 150)
+                }
+                calcInputOverwrite = true;
+            } else {
+                inAnim();
+                if(calcState=="addition") {
+                    calcInput.value = Number(firstValue) + Number(calcInput.value);
+                } else if(calcState=="substract") {
+                    calcInput.value = Number(firstValue) - Number(calcInput.value);
+                } else if(calcState=="multiply") {
+                    calcInput.value = Number(firstValue) * Number(calcInput.value);
+                } else if(calcState=="divide") {
+                    if(Number(calcInput.value)==0) {
+                        validation("0");
+                        return;
+                    }
+                    calcInput.value = Number(firstValue) / Number(calcInput.value);
+                }
+                calcInputOverwrite = true;
+            }
+        }
+
+        document.getElementById('plus').addEventListener('click', () => {
+            if(calcState != ""){
+                equal();
+                firstValue = 0;
+                result = calcInput.value
+            } else {
+                result = "";
+                switchAnim();
+            }
+            firstValue = calcInput.value;
+            setTimeout(() => {calcInput.value = result}, 150)
+            calcState = "addition";
+            inAnimS();
+            calcSt.textContent = "+";
+        });
+        
+        document.getElementById('minus').addEventListener('click', () => {
+            if(calcState != ""){
+                equal();
+                firstValue = 0;
+                result = calcInput.value
+            } else {
+                result = "";
+                switchAnim();
+            }
+            firstValue = calcInput.value;
+            setTimeout(() => {calcInput.value = result}, 150)
+            calcState = "substract";
+            inAnimS();
+            calcSt.textContent = "-";
+        });
+        
+        document.getElementById('multiply').addEventListener('click', () => {
+            if(calcState != ""){
+                equal();
+                firstValue = 0;
+                result = calcInput.value
+            } else {
+                result = "";
+                switchAnim();
+            }
+            firstValue = calcInput.value;
+            setTimeout(() => {calcInput.value = result}, 150)
+            calcState = "multiply";
+            inAnimS();
+            calcSt.textContent = "x";
+        });
+        
+        document.getElementById('divide').addEventListener('click', () => {
+            if(calcState != ""){
+                equal();
+                firstValue = 0;
+                result = calcInput.value
+            } else {
+                result = "";
+                switchAnim();
+            }
+            firstValue = calcInput.value;
+            setTimeout(() => {calcInput.value = result}, 150)
+            calcState = "divide";
+            inAnimS();
+            calcSt.textContent = ":";
+        });
+        
+
+        document.getElementById('eql').addEventListener('click', () => {
+            equal(true);
+        });
+
+        document.getElementById('backspace').addEventListener('click', () => {
+            calcInput.style.animation = "none";
+            void calcInput.offsetWidth;
+            calcInput.style.animation = "";
+            calcInput.classList.add("slicePop");
+            changeInputFontSize();
+            if (calcInput.value.slice(-2, -1) === ".") {
+                calcInput.value = calcInput.value.slice(0, -2);
+            } else {
+                calcInput.value = calcInput.value.slice(0, -1);
+            }
+        });
+
+        document.getElementById('silnia').addEventListener('click', () =>{
+            switchAnim();
+            setTimeout(() => {calcInput.value = obliczSilnie(calcInput.value)
+            }, 150)
+        });
+
+        function obliczSilnie(n){ // FUNKCJA Z POLSKĄ NAZWĄ OMG
+            var silnia = 1;
+            for(i = 1; i<=Math.abs(n); i++) { // oblicza silnie bez znaku +/-
+                silnia *= i
+                console.log(silnia);
+                if(silnia == Infinity) { // przestaje jak przekroczy limit
+                    validation("limit");
+                    return 0; //zeby warninga nie było
+                };
+            }
+            if(n>=0){ // zmienia wynik na ujemny jeżeli input był ujemny (w sumie dziwnie zrobione troche ale działa XD)
+                return silnia;
+            } else {
+                return -(silnia);
+            }
+        }
+        
+        document.getElementById("F").addEventListener('click', () => {
+            if(calcInput.value<0 || !Number.isInteger(Number(calcInput.value))) { // walidacja czy input jest nieujemny i calkowity
+                validation("fibonacci");
+                return;
+            }
+            switchAnim();
+            setTimeout(() => {calcInput.value = fibonacci(calcInput.value)
+            }, 150)
+        });
+
+        function fibonacci(n) {
+            if(n==0) {return 0;} //correction jesli n to 0
+
+            let a = 0, b = 1;
+            for (let i = 2; i <= n; i++) {
+                let _a = a; //temp var zeby działało
+                a = b;
+                b += _a;
+                console.log(b); // zeby se mozna bylo sprawdzic
+                if(b == Infinity) { // przestaje jak przekroczy limit
+                    validation("limit");
+                    return 0; //zeby warninga nie było
+                }
+            }
+            return b;
+        }
+
+        let addComma = false;
+        document.getElementById('comma').addEventListener('click', () => {
+            if(calcInput.value.includes("."||",")) {
+                addComma = false;
+            } else {
+                addComma = true;
+            }
+        });
+        
+        document.getElementById('pm').addEventListener('click', () => {calcInput.value *= -1, inAnim();});
+
+        document.getElementById('sqrt').addEventListener('click', () => {
+            if(calcInput.value<0) {
+                validation("-");
+                return;
+            }
+            switchAnim();
+            setTimeout(() => {calcInput.value = Math.sqrt(calcInput.value);}, 150)
+        });
+
+        document.getElementById('pwr').addEventListener('click', () => {
+            switchAnim();
+            setTimeout(() => {calcInput.value *= calcInput.value;}, 150)
+        });
+
+        document.getElementById('log').addEventListener('click', () => {
+            switchAnim();
+            setTimeout(() => {calcInput.value = Math.log(calcInput.value);}, 150)
+        });
+        
+        document.getElementById('C').addEventListener('click', () => {
+            switchAnim();
+            outAnimS()
+            calcState = "";
+            setTimeout(() => calcSt.textContent = "", 150)
+            setTimeout(() => calcInput.value = "", 100)
+        });
+        
+    </script>
+</body>
+</html>
