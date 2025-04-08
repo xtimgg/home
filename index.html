@@ -193,10 +193,10 @@
 
       let currentButton;
       setTimeout(() => {
-        iframe.src = `/projects/${file}`;
+        iframe.src = `/home/projects/${file}`;
         document.querySelectorAll('button').forEach(button => {
             button.addEventListener('dblclick', () => {
-                window.open(`/projects/${file}`, '_blank');
+                window.open(`/home/projects/${file}`, '_blank');
             });
             button.classList.remove('current');
             let isHovering = false;
