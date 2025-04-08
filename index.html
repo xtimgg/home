@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Portfolio</title>
+  <style>
+    * {
+      transition: .5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    main {
+      text-align: center;
+      margin-top: 40vh;
+      transition: .2s cubic-bezier(0.8, 0, 0.3, 0);
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      background-color: #0f0f0f;
+      color: white;
+    }
+    #iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      opacity: 1;
+      transition: cubic-bezier(0.16, 1.2, .3, 1) 0.6s, border-radius cubic-bezier(0,.68,0,1) 0.25s;
+    }
+    #iframe.loaded {
+      opacity: 1;
+      transform: rotate(0) scale(1);
+      border-radius: 0;
+      filter: blur(0px);
+    }
+    #iframe.loading-out {
+      opacity: 0;
+      transform: rotate(90deg) scale(0);
+      border-radius: 100px;
+      filter: blur(50px);
+    }
+    #iframe.loading-in {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0) !important;
+      border-radius: 10000px !important;
+      filter: blur(50px) !important;
+    }
+        
+    nav {
+        position: absolute;
+        z-index: 999;
+        float: left;
+        top: 5vh;
+        left: calc(-15vw - 100px);
+        padding-right: 4vw;
+        transition: .6s cubic-bezier(0.16, 1, 0.3, 1);
+        height: 80%;
+        width: calc(15vw + 100px);
+        display: flex;
+        flex-direction: column;
+      }
+
+    nav:hover {
+        left: -2vw;
+    }
+
+    nav #buttons {
+      width: 80%;
+      border-radius: 2vw;
+      overflow: hidden;
+      outline: rgba(255, 255, 255, .3) solid 1.5px;
+      box-shadow: 0 3px 20px rgba(0, 0, 0, .4);
+    }
+
+    nav button {
+        border: none;
+        list-style-type: none;
+        text-transform: uppercase;
+        text-align: right;
+        padding: 15% 5vw;
+        width: 100%;
+        font-size: calc(1vw + 10px);
+        transition: .6s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        user-select: none;
+        background: linear-gradient(to right, #dedede0f 50%, #1d1d1d0f 50%) repeat;
+        background-position: -100% 0;
+        background-size: 50%;
+        text-shadow: none;
+        color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      nav button:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+    nav button:hover {
+        padding: 30% 5vw;
+        background-position: 8% 0;
+        color: white;
+    }
+
+    nav button:active {
+        transition: .1s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 20% 5vw;
+        filter: brightness(150%);
+    }
+
+    .current {
+        filter: brightness(200%);
+        color: white;
+        text-shadow: 0 0 4px rgba(255, 255, 255, 0.667), 0 0 16px rgba(255, 255, 255, 0.393);
+    }
+
+    nav #code {
+        position: absolute;
+        top: -100%;
+        left: 0px;
+        width: 4vw;
+        height: 4vw;
+        background: rgba(255, 255, 255, .1);
+        border-radius: 100%;
+        font-size: calc(.8vw + 2px);
+        outline: 1px solid rgba(255, 255, 255, .3);
+        color: rgba(255, 255, 255, .8);
+        text-align: center;
+        padding: .3vw;
+        transition: .6s cubic-bezier(0.16, 1, 0.3, 1);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+    }
+
+    nav #code:hover {
+      transform: scale(1.2);
+    }
+
+    nav #code:active {
+        transform: scale(.9);
+    }
+
+    nav:hover #code {
+        left: 75%;
+    }
+
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div id="buttons">
+    </div>
+    <button id="code">see<br>code</button>
+  </nav>
+
+  <main>
+    <h1><-- hover at the edge for project list</h1>
+    <p>(gonna make something else on that page)</p>
+  </main>
+
+  <iframe id="iframe" class="loaded" src=""></iframe>
+
+  <script>
+    const projectFiles = ['project1.html', 'project2.html', 'project3.html']; // could be dynamic but im too lazy
+
+    const navbarC = document.getElementById('navbar');
+    const navbar = document.getElementById('buttons');
+    const iframe = document.getElementById('iframe');
+    const cb = document.getElementById('code');
+
+    projectFiles.forEach(file => {
+      const btn = document.createElement('button');
+      btn.textContent = file.replace('.html', '');
+      btn.dataset.file = file;
+      btn.addEventListener('click', () => loadProject(file));
+      navbar.appendChild(btn);
+    });
+
+    function loadProject(file) {
+      document.querySelectorAll('main')[0].style.transform = 'scale(0)';
+      setTimeout(() => {
+        document.querySelectorAll('main')[0].style.display = 'none';
+      }, 200);
+      if (iframe.src.endsWith(file)) {
+        return;
+      }
+      iframe.classList.remove('loaded');
+      iframe.classList.remove('loading-in');
+      iframe.classList.add('loading-out');
+
+      let currentButton;
+      setTimeout(() => {
+        iframe.src = `/projects/${file}`;
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('dblclick', () => {
+                window.open(`/projects/${file}`, '_blank');
+            });
+            button.classList.remove('current');
+            let isHovering = false;
+            navbarC.addEventListener('mouseover', () => {
+              isHovering = true;
+            });
+            navbarC.addEventListener('mouseleave', () => {
+              isHovering = false;
+            });
+            const interval = setInterval(() => {
+              if (isHovering) {
+                if(currentButton.classList.contains('current')) {
+                  cb.style.top = currentButton.offsetTop + currentButton.offsetHeight / 2 - cb.offsetHeight / 2 + 'px';
+                }
+              }
+            }, 1); // not rly necessary but it makes it smoother, also i dont care about performance >:3
+          if (button.dataset.file === file) {
+            currentButton = button;
+            button.classList.add('current');
+            cb.onclick = () => {
+              window.open(`https://github.com/xtimgg/home/blob/main/projects/${file}`, '_blank');
+            };
+            cb.style.top = button.offsetTop + button.offsetHeight / 2 - cb.offsetHeight / 2 + 'px';
+          }
+        });
+        iframe.onload = () => {
+          iframe.classList.remove('loading-out');
+          iframe.classList.add('loading-in');
+          setTimeout(() => {
+            iframe.classList.remove('loading-in');
+            iframe.classList.add('loaded');
+          }, 150);
+        }
+      }, 300);
+    }
+  </script>
+</body>
+</html>
