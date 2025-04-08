@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Clock</title>
+    
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/noah-grotesque');
+
+        body {
+            background-color: #222222;
+            color: white;
+            font-family: 'Noah Grotesque', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: -3vh 0 3vh 0;
+        }
+
+
+        .container {
+            background: radial-gradient(#1d1d1d 60%, #333333 100%);
+            font-size: 10vh;
+            font-weight: bold;
+            margin: 2vh;
+            padding: .3em;
+            border: 3px solid white;
+            border-radius: 7vh;
+            width: 55vh;
+            height: 12vh;
+            text-align: center;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 15px 0 rgba(255,255,255,0.5), 0 0 50px 0 rgba(255, 255, 255, 0.211);
+            transition: .3s cubic-bezier(.65,-0.04,.27,1.4);
+            position: relative;
+            @media (max-aspect-ratio: 2/3) {
+                transform: scale(0.5);
+            }
+        }
+
+        .container:hover {
+            height: 20vh;
+        }
+
+        .clock {
+            user-select: none;
+            margin-bottom: 2vh;
+            white-space: nowrap;
+        }
+
+        .timezoneInfo {
+            user-select: none;
+            font-weight: 300;
+            font-style: italic;
+            font-size: 4vh;
+            filter: blur(8px);
+            transition: .3s cubic-bezier(.42,-0.01,.33,1.01);
+        }
+
+        .container:hover .timezoneInfo{
+            filter: blur(0);
+        }
+
+        button {
+            color: white;
+            font-size: 6vh;
+            background-color: transparent;
+            border: none;
+            width: 12vh;
+            height: 12vh;
+            transition: transform .3s cubic-bezier(.2, 2,.27,1), translate .3s cubic-bezier(.65,-0.04,.27,1.4);
+            translate: -.7vh;
+        }
+
+        button:hover {
+            cursor: pointer;
+            text-shadow: 0 0 15px rgba(255,255,255,0.5), 0 0 50px rgba(255, 255, 255, 0.211);
+        }
+
+        button:active {
+            transform: scale(0.75);
+        }
+
+        #add {
+            position: fixed;
+            bottom: .5vh;
+            border-radius: 100vw;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            width: 6vh;
+            height: 6vh;
+            padding: 0;
+        }
+
+        #add:hover, #add:focus-within {
+            width: 60vh;
+            height: 12vh;
+            padding: 0 4vh;
+        }
+
+        #add:hover button, #add:focus-within button {
+            translate: 4vh;
+        }
+
+        input {
+            font-size: 4vh;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            text-align: left;
+            transition: .3s cubic-bezier(.2, 2,.27,1);
+            opacity: 0;
+            filter: blur(8px);
+            transition: .3s cubic-bezier(.42,-0.01,.33,1.01);
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            transition: all 5000s ease-in-out 0s;
+        }
+
+        #add:hover input, #add:focus-within input{
+            filter: blur(0);
+            opacity: 1;
+        }
+
+        @keyframes errorAnim {
+            0% {transform: translateX(-2vw); border-color: rgb(255, 0, 0); box-shadow: 0 0 15px rgba(255, 0, 0, 0.5), 0 0 50px rgba(255, 0, 0, 0.211); }
+            12% {transform: translateX(2vw);}
+            24% {transform: translateX(-1.5vw); border-color: rgb(255, 46, 46)}
+            36% {transform: translateX(1vw);}
+            48% {transform: translateX(-.7vw);}
+            60% {transform: translateX(.3vw);}
+            72% {transform: translateX(-.1vw); border-color: rgb(255, 217, 217)}
+            84% {transform: translateX(.1vw);}
+            100% {transform: translateX(0vw); border-color: rgb(255, 255, 255); box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 50px rgba(255, 255, 255, 0.211);}
+        }
+
+        /* width */
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+        background: #353535;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 100px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+        background: #afafaf;
+        }
+    </style>
+</head>
+
+<body>
+    <!--you can freely change or add more timezones with id's and they will be handled automatically-->
+    <div class="container">
+        <div id="America/Argentina/Tucuman" class="clock"></div>
+    </div>
+
+    <div class="container">
+        <div id="America/La_Paz" class="clock"></div>
+    </div>
+
+    <div class="container">
+        <div id="America/Iqaluit" class="clock"></div>
+    </div>
+
+    <div class="container" id="add">
+        <input type="text" placeholder="time/zone/name" id="tz"><button onclick="addClock(document.getElementById('tz').value); document.getElementById('tz').value=``">+</button>
+    </div>
+
+    <script>
+        function updateTime(timezone) {
+            const date = new Date();
+            const format = { timeZone: timezone, hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            const locale = timezone.startsWith('Europe') || timezone.startsWith('europe') ? 'pl-PL' : 'en-US';
+            const formattedTime = date.toLocaleTimeString(locale, format);
+            document.getElementById(timezone).textContent = formattedTime;
+            setTimeout(() => {
+                updateTime(timezone);
+            }, 1000);
+        }
+
+        const tzadd = document.getElementById('add');
+        function addClock(timezone) {
+            try {
+                new Intl.DateTimeFormat(undefined, { timeZone: timezone });
+                const container = document.createElement('div');
+                container.classList.add('container');
+                const clock = document.createElement('div');
+                clock.id = timezone;
+                clock.classList.add('clock');
+                container.appendChild(clock);
+                document.getElementById('add').insertAdjacentElement('beforebegin', container);
+                updateTime(timezone);
+                const info = document.createElement('div');
+                let readableTimezone = timezone.replace(/_/g, ' ').split('/')
+                _temp = readableTimezone[readableTimezone.length - 1];
+                readableTimezone.pop();
+                readableTimezone = `${_temp} (${readableTimezone.join(', ')})`;
+                console.log(readableTimezone);
+                info.textContent = readableTimezone;
+                info.classList.add('timezoneInfo');
+                document.getElementById(timezone).insertAdjacentElement('afterend', info);
+            } catch (e) {
+                tzadd.style.animation = "none";
+                void tzadd.offsetWidth;
+                tzadd.style.animation = "";
+                tzadd.style.animation = `errorAnim .6s`;
+            }
+        }
+        
+        const clocks = document.querySelectorAll('.clock');
+        clocks.forEach(clock => {
+            const timezone = clock.id;
+            updateTime(timezone);
+            const info = document.createElement('div');
+            let readableTimezone = timezone.replace(/_/g, ' ').split('/')
+            _temp = readableTimezone[readableTimezone.length - 1];
+            readableTimezone.pop();
+            readableTimezone = `${_temp} (${readableTimezone.join(', ')})`;
+            console.log(readableTimezone);
+            info.textContent = readableTimezone;
+            info.classList.add('timezoneInfo');
+            document.getElementById(timezone).insertAdjacentElement('afterend', info);
+        });
+
+        const timezones = Intl.supportedValuesOf('timeZone');
+        const tzInput = document.getElementById('tz');
+        tzInput.setAttribute('list', 'timezones');
+
+        const datalist = document.createElement('datalist');
+        datalist.id = 'timezones';
+        timezones.forEach(tz => {
+            const option = document.createElement('option');
+            option.value = tz;
+            datalist.appendChild(option);
+        });
+        document.body.appendChild(datalist);
+    </script>
+</body>
+</html>
