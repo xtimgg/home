@@ -74,7 +74,7 @@
     </style>
 </head>
 <body>
-    <h1 id="info">nw graj czy cos</h1>
+    <h1 id="info">nw graj czy cos</h1> <button onclick="snakeGrow(10)">dodaj</button>
     
     <div id="canvas"></div>
 
@@ -84,7 +84,8 @@
         const canvas = document.getElementById('canvas');
         canvas.style.gridTemplateColumns = `repeat(${resolution}, 1fr)`;
         canvas.style.gridTemplateRows = `repeat(${resolution}, 1fr)`;
-        let snakepos = Math.floor(Math.random() * cellnum);
+        let snakePos = Math.floor(Math.random() * cellnum);
+        let snakeLength = 0;
         let direction = 1; // 0 - up, 1 - down, 2 - left, 3 - right
         let isGameOver = true;
 
@@ -96,19 +97,33 @@
         }
 
         // Create snake element
-        const snakeElement = document.createElement('div');
-        snakeElement.style.width = `${canvas.offsetWidth / resolution}px`;
-        snakeElement.style.height = `${canvas.offsetHeight / resolution}px`;
-        snakeElement.className = 'snake';
-        canvas.appendChild(snakeElement);
+        function snakeGrow(times = 1) {
+            snakeLength += times;
+            const snakeElement = document.createElement('div');
+            snakeElement.style.width = `${canvas.offsetWidth / resolution}px`;
+            snakeElement.style.height = `${canvas.offsetHeight / resolution}px`;
+            for (let i = snakeLength - times + 1; i <= snakeLength; i++) {
+                const snakeElement = document.createElement('div');
+                snakeElement.id = `snake${i}`;
+                snakeElement.className = 'snake';
+                snakeElement.style.width = `${canvas.offsetWidth / resolution}px`;
+                snakeElement.style.height = `${canvas.offsetHeight / resolution}px`;
+                canvas.appendChild(snakeElement);
+            }
+        }
+        snakeGrow(3);
 
-        function updateSnakePosition() {
-            const row = Math.floor(snakepos / resolution);
-            const col = snakepos % resolution;
+        function updatesnakePosition() {
+            const row = Math.floor(snakePos / resolution);
+            const col = snakePos % resolution;
             const cellWidth = canvas.offsetWidth / resolution;
             const cellHeight = canvas.offsetHeight / resolution;
 
-            snakeElement.style.transform = `translate(${col * cellWidth}px, ${row * cellHeight}px)`;
+            for(let i = 1; i<=snakeLength; i++) {
+                setTimeout(() => {
+                    document.getElementById(`snake${i}`).style.transform = `translate(${col * cellWidth}px, ${row * cellHeight}px)`;
+                }, (i-1) * 200);
+            }
         }
 
         document.addEventListener('keydown', (event) => {
@@ -125,29 +140,29 @@
 
         function move() {
             if (direction === 0) {
-                snakepos -= resolution;
+                snakePos -= resolution;
             } else if (direction === 1) {
-                snakepos += resolution;
+                snakePos += resolution;
             } else if (direction === 2) {
-                if (snakepos % resolution === 0) {
+                if (snakePos % resolution === 0) {
                     gameOver();
                     return;
                 }
-                snakepos -= 1;
+                snakePos -= 1;
             } else if (direction === 3) {
-                if ((snakepos + 1) % resolution === 0) {
+                if ((snakePos + 1) % resolution === 0) {
                     gameOver();
                     return;
                 }
-                snakepos += 1;
+                snakePos += 1;
             }
 
-            if (snakepos < 0 || snakepos >= cellnum) {
+            if (snakePos < 0 || snakePos >= cellnum) {
                 gameOver();
                 return;
             }
 
-            updateSnakePosition();
+            updatesnakePosition();
         }
 
         setInterval(() => {
@@ -165,20 +180,20 @@
             if (isGameOver) {
                 isGameOver = false;
                 document.getElementById('info').innerText = 'graj';
-                if (snakepos < 0 || snakepos >= cellnum) {
-                    snakepos = Math.floor(Math.random() * cellnum);
+                if (snakePos < 0 || snakePos >= cellnum) {
+                    snakePos = Math.floor(Math.random() * cellnum);
                 }
-                if (snakepos < cellnum / 2) {
+                if (snakePos < cellnum / 2) {
                     direction = 1;
                 } else {
                     direction = 0;
                 }
-                updateSnakePosition();
+                updatesnakePosition();
             }
         });
 
         // Initialize snake position
-        updateSnakePosition();
+        updatesnakePosition();
     </script>
 </body>
 </html>
