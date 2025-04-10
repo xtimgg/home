@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        @import url('https://fonts.cdnfonts.com/css/noah-grotesque');
         *{
             margin: 0;
             padding: 0;
-            font-family: sans-serif;
+            font-family: 'Noah Grotesque', sans-serif;
             text-align: center;
             user-select: none;
             transition: .3s cubic-bezier(.11,1.12,.36,1);
@@ -17,25 +18,140 @@
         body {
             background-color: #0f0f0f;
             color: white;
+            overflow: hidden;
         }
 
         h1 {
-            margin-top: 5vh;
-            margin-bottom: 1vh;
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            color: #ffffff51;
+            font-size: 400%;
+        }
+
+        #scores {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px;
+        }
+        @media screen and (max-width: 500px) {
+            #scores {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+            
+        }
+
+        #scores p {
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #scores span {
+            font-size: 50px;
+        }
+
+        #options {
+            width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            white-space: nowrap;
+        }
+
+        label input[type="checkbox"] {
+            appearance: none;
+            background-color: #ffffff38;
+            border-radius: 72px;
+            border-style: none;
+            flex-shrink: 0;
+            height: 20px;
+            margin-right: 10px;
+            position: relative;
+            width: 40px;
+            translate: 0 1px;
+        }
+
+        label input[type="checkbox"]::before {
+            bottom: -6px;
+            content: "";
+            left: -6px;
+            position: absolute;
+            right: -6px;
+            top: -6px;
+        }
+
+        label input[type="checkbox"],
+        label input[type="checkbox"]::after {
+            transition: all .3s cubic-bezier(0.2, 1.5, 0.3, 1);
+            outline: 1px solid #ffffff89;
+        }
+
+        label input[type="checkbox"]::after {
+            background-color: #fff;
+            border-radius: 50%;
+            content: "";
+            height: 14px;
+            left: 3px;
+            position: absolute;
+            top: 3px;
+            width: 14px;
+        }
+
+        label input[type=checkbox] {
+            cursor: default;
+        }
+
+        label input[type="checkbox"]:hover {
+            background-color: #ffffff44;
+            transition-duration: 0s;
+        }
+
+        label input[type="checkbox"]:checked {
+            background-color: #591dff;
+        }
+
+        label input[type="checkbox"]:checked::after {
+            background-color: #fff;
+            left: 23px;
+        }
+
+        label input[type="checkbox"]:checked:hover {
+            background-color: #532dd2;
+        }
+        
+        label:not(:has(input[type="checkbox"]:checked)) {
+            color: #ffffff99;
         }
 
         #canvas {
             width: min(70vh, 70vw);
             height: min(70vh, 70vw);
-            margin: 5vh auto;
+            margin: 0 auto;
             background-color: #1e1e1e;
             color: white;
-            border: 1px solid white;
+            outline: 1px solid white;
             border-radius: 10px;
             display: grid;
             grid-template-columns: repeat(10, 1fr);
             grid-template-rows: repeat(10, 1fr);
             overflow: hidden;
+            backface-visibility: hidden;
+            position: relative;
         }
 
         .cell {
@@ -47,21 +163,52 @@
         }
 
         .cell:hover {
-            background-color: #2e2e2e;
+            filter: brightness(1.2);
         }
 
-        input, button {
-            font-size: 1.5em;
-            margin: 0 auto;
-            padding: 0;
-            width: 20vw;    
-            height: 4vw;    
-            border: 1px solid white;
-            border-radius: 5px;
-            background-color: #1e1e1e;
+        button, input[type="number"] {
+            background-color: #353535;
             color: white;
-            display: block;
+            border: none;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 1px 10px;
+            cursor: pointer;
+            text-align: center;
+            text-overflow: ellipsis;
+            outline: none;
+            border-radius: 5px;
+            border: 1px solid #ffffff44;
+            width: 30px;
+            padding-left: 15px;
         }
+
+        /* input[type="number"]:hover, input[type="number"]:focus {
+            width: 50px;
+            padding: 0;
+        } */
+
+        input[type=number]::-webkit-inner-spin-button {
+            filter: invert(80%);
+        }
+
+        button {
+            padding: 10px 0;
+            width: 150px;
+            height: 60px;
+            font-size: 18px;
+        }
+
+        button:hover, input[type="number"]:hover {
+            background-color: #ffffff30;
+            transform: scale(1.01);
+        }
+
+        button:active, input[type="number"]:active {
+            background-color: #ffffff23;
+            transform: scale(0.97);
+        }
+
 
         .snake {
             background-color: #00ff00;
@@ -71,74 +218,176 @@
             height: 100%;
             transition: transform 0.2s cubic-bezier(.25,1.39,.52,1);
         }
+
+        .snakeCell {
+            background-color: #00ff00;
+            border-radius: 10%;
+            scale: .9;
+        }
+        
+        @keyframes shake {
+            0% {transform: translateX(1vw);}
+            20% {transform: translateX(-.7vw);}
+            40% {transform: translateX(.3vw);}
+            60% {transform: translateX(-.1vw);}
+            80% {transform: translateX(.1vw);}
+            100% {transform: translateX(0vw);}
+        }
+
+        @keyframes pop {
+            0% {transform: scale(0);}
+            100% {transform: scale(1);}
+        }
+
+        .dedSnejk {
+            background-color: #ff0000;
+            border-radius: 10%;
+            scale: .9;  
+        }
+
+        .food {
+            background-color: #ff0000;
+            border-radius: 50%;
+            scale: .9;
+            animation: pop .3s cubic-bezier(.25,2,.52,1);
+        }
     </style>
 </head>
 <body>
-    <h1 id="info">nw graj czy cos</h1> <button onclick="snakeGrow(10)">dodaj</button>
+    <section id="scores">
+            <p>score: <span id="score">0</span></p>
+            <p>best: <span id="best">0</span></p>
+        
+        <button onclick="toggleOptions(this)">open settings</button>
+        <section id="options">
+            <label>
+                <input type="checkbox" id="retroDisplay" onclick="toggleRetroDisplay(this.checked)">
+                retro display
+            </label>
+            <label>
+                speed
+                <input type="number" id="speed" min="0" max="100" value="5" disabled title="not working yet">
+            </label>
+        </section>
+    </section>
     
-    <div id="canvas"></div>
+    <div id="canvas"><h1 id="info">nw graj czy coś</h1> </div>
 
     <script>
         const resolution = 16;
         const cellnum = resolution * resolution;
         const canvas = document.getElementById('canvas');
+        const info = document.getElementById('info');
+        const score = document.getElementById('score');
+        const best = document.getElementById('best');
         canvas.style.gridTemplateColumns = `repeat(${resolution}, 1fr)`;
         canvas.style.gridTemplateRows = `repeat(${resolution}, 1fr)`;
+        best.innerText = localStorage.getItem('best') || 0;
         let snakePos = Math.floor(Math.random() * cellnum);
+        let snakeTail = [];
         let snakeLength = 0;
+        let startLength = 3;
+        let snakeSpeed = 5; // intended: 5
         let direction = 1; // 0 - up, 1 - down, 2 - left, 3 - right
         let isGameOver = true;
+        let playCooldown = false;
+        let retroDisplay = false;
 
-        // Create cells
         for (let i = 0; i < cellnum; i++) {
             const cell = document.createElement('p');
             cell.className = 'cell';
             canvas.appendChild(cell);
         }
 
-        // Create snake element
         function snakeGrow(times = 1) {
             snakeLength += times;
             const snakeElement = document.createElement('div');
-            snakeElement.style.width = `${canvas.offsetWidth / resolution}px`;
-            snakeElement.style.height = `${canvas.offsetHeight / resolution}px`;
             for (let i = snakeLength - times + 1; i <= snakeLength; i++) {
                 const snakeElement = document.createElement('div');
                 snakeElement.id = `snake${i}`;
                 snakeElement.className = 'snake';
-                snakeElement.style.width = `${canvas.offsetWidth / resolution}px`;
-                snakeElement.style.height = `${canvas.offsetHeight / resolution}px`;
-                canvas.appendChild(snakeElement);
+                snakeElement.style.opacity = 0;
+                snakeElement.animate([
+                    { width: '0', height: '0', margin: `${canvas.offsetHeight / resolution/2}px 0 0 ${canvas.offsetWidth / resolution/2}px` },
+                    { width: `${canvas.offsetWidth / resolution}px`, height: `${canvas.offsetHeight / resolution}px`, margin: '0' }
+                ], {
+                    duration: 300,
+                    easing: 'cubic-bezier(.25,2,.52,1)',
+                    fill: 'forwards'
+                });
+                if (document.getElementById(`snake${snakeLength - times}`)) {
+                    snakeElement.style.transform = document.getElementById(`snake${snakeLength - times}`).style.transform;
+                } else {
+                    snakeElement.style.transform = `translate(${Math.floor(snakePos % resolution) * (canvas.offsetWidth / resolution)}px, ${Math.floor(snakePos / resolution) * (canvas.offsetHeight / resolution)}px)`;
+                }
+                    canvas.appendChild(snakeElement);
             }
         }
-        snakeGrow(3);
+        snakeGrow(startLength);
 
-        function updatesnakePosition() {
+        function updateSnakePosition() {
             const row = Math.floor(snakePos / resolution);
             const col = snakePos % resolution;
             const cellWidth = canvas.offsetWidth / resolution;
             const cellHeight = canvas.offsetHeight / resolution;
 
-            for(let i = 1; i<=snakeLength; i++) {
+            document.querySelectorAll('.cell').forEach((cell, index) => {
+                if (!cell.className.includes('food')) cell.className = 'cell';
+                if (retroDisplay && (index === snakePos || snakeTail.includes(index))) {
+                    cell.className = 'cell snakeCell';
+            }
+            });
+            for(let i = 1; i<=snakeLength+5; i++) {
                 setTimeout(() => {
-                    document.getElementById(`snake${i}`).style.transform = `translate(${col * cellWidth}px, ${row * cellHeight}px)`;
-                }, (i-1) * 200);
+                    const snakeElement = document.getElementById(`snake${i}`);
+                    if (!snakeElement) return;
+                    if (retroDisplay) {
+                        snakeElement.style.opacity = 0;
+                    } else {
+                        snakeElement.style.opacity = 1;
+                    }
+                    if (!isGameOver) {
+                        snakeElement.style.transform = `translate(${col * cellWidth}px, ${row * cellHeight}px)`;
+                    }
+                }, (i-1) * 1000 / snakeSpeed);
+                const snakeElement = document.getElementById(`snake${i}`);
+                if (snakeElement && firstPlay) snakeElement.style.transform = `translate(${col * cellWidth}px, ${row * cellHeight}px)`;
             }
         }
+        updateSnakePosition();
 
+
+        let moveCooldown = false;
+        let delayedKey = "";
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowUp' && direction !== 1) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                play();
+            }
+            if (isGameOver) return;
+            if (moveCooldown){
+                delayedKey = event.key;
+                return;
+            }
+            if ((event.key === 'ArrowUp' || event.key === 'w') && direction !== 1 && direction !== 0) {
+                moveCooldown = true;
                 direction = 0;
-            } else if (event.key === 'ArrowDown' && direction !== 0) {
+            } else if ((event.key === 'ArrowDown' || event.key === 's') && direction !== 1 && direction !== 0) {
+                moveCooldown = true;
                 direction = 1;
-            } else if (event.key === 'ArrowLeft' && direction !== 3) {
+            } else if ((event.key === 'ArrowLeft' || event.key === 'a') && direction !== 3 && direction !== 2) {
+                moveCooldown = true;
                 direction = 2;
-            } else if (event.key === 'ArrowRight' && direction !== 2) {
+            } else if ((event.key === 'ArrowRight' || event.key === 'd') && direction !== 3 && direction !== 2) {
+                moveCooldown = true;
                 direction = 3;
             }
         });
 
         function move() {
+            snakeTail.unshift(snakePos);
+            if (snakeTail.length >= snakeLength) {
+                const tail = snakeTail.pop();
+            }
             if (direction === 0) {
                 snakePos -= resolution;
             } else if (direction === 1) {
@@ -157,43 +406,216 @@
                 snakePos += 1;
             }
 
-            if (snakePos < 0 || snakePos >= cellnum) {
+            if (snakePos < 0 || snakePos >= cellnum || snakeTail.includes(snakePos)) {
                 gameOver();
                 return;
             }
 
-            updatesnakePosition();
+            if (document.querySelectorAll('.cell')[snakePos].className.includes('food')) {
+                document.querySelectorAll('.cell')[snakePos].className = 'cell';
+                spawnFood();
+                snakeGrow(1);
+                score.innerText = snakeLength - startLength;
+                if (snakeLength - startLength > parseInt(best.innerText)) {
+                    best.innerText = snakeLength - startLength;
+                    localStorage.setItem('best', best.innerText);
+                }
+            }
+            updateSnakePosition();
         }
 
         setInterval(() => {
             if (!isGameOver) {
                 move();
-            }
-        }, 200);
-
-        function gameOver() {
-            isGameOver = true;
-            document.getElementById('info').innerText = 'game over lol';
-        }
-
-        document.body.addEventListener('click', () => {
-            if (isGameOver) {
-                isGameOver = false;
-                document.getElementById('info').innerText = 'graj';
-                if (snakePos < 0 || snakePos >= cellnum) {
-                    snakePos = Math.floor(Math.random() * cellnum);
+                moveCooldown = false;
+                if (delayedKey) {
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: delayedKey }));
+                    delayedKey = "";
                 }
-                if (snakePos < cellnum / 2) {
-                    direction = 1;
-                } else {
-                    direction = 0;
-                }
-                updatesnakePosition();
             }
+        }, 1000 / snakeSpeed);
+
+        document.getElementById('speed').addEventListener('input', function() {
+            snakeSpeed = this.value;
         });
 
-        // Initialize snake position
-        updatesnakePosition();
+        function gameOver() {
+            _snakeTail = snakeTail; // for cosmetics on retro display switch
+            document.body.style.animation = 'shake .5s linear';
+            setTimeout(() => {
+                document.body.style.animation = 'none';
+            }, 500);
+            isGameOver = true;
+            playCooldown = true;
+            setTimeout(() => {
+                playCooldown = false;
+            }, 500);
+            info.innerHTML = 'game over lol<br>click to play again';
+            document.querySelectorAll('.cell').forEach((cell) => {
+                if (cell.className.includes('food')) cell.className = 'cell';
+                if (retroDisplay && cell.className.includes('snakeCell')) {
+                    cell.className = 'cell dedSnejk';
+                }
+            });
+            const snakes = document.querySelectorAll('.snake');
+            for (let i = 0; i < snakes.length; i++) {
+                setTimeout(() => {
+                    snakes[i].animate([
+                        { marginTop: '0' },
+                        { marginTop: '100vh' }
+                    ], {
+                        duration: 300,
+                        easing: 'cubic-bezier(1,0,.95,.34)',
+                        fill: 'forwards'
+                    });
+                    setTimeout(() => {
+                        snakes[i].remove();
+                    }, 300);
+                }, i * (500/snakeLength)); // so its faster for longer snakes
+            }
+            snakeLength = 0;
+            snakeTail = [];
+        }
+
+        var firstPlay = true;
+        function play() {
+            score.innerText = 0;
+            if (!isGameOver) return;
+            if (playCooldown) {
+                setTimeout(() => {
+                    play();
+                }, 500);
+                return;
+            }
+            isGameOver = false;
+            info.innerText = '';
+            spawnFood();
+            if(!firstPlay) {
+                snakePos = Math.floor(Math.random() * cellnum);
+                snakeGrow(3);
+            }
+            if (snakePos < 0 || snakePos >= cellnum) {
+                snakePos = Math.floor(Math.random() * cellnum);
+            }
+            if (snakePos < cellnum / 2) {
+                direction = 1;
+            } else {
+                direction = 0;
+            }
+            if (firstPlay) firstPlay = false;
+            updateSnakePosition();
+        }
+
+        canvas.addEventListener('click', () => {
+            play();
+        });
+
+        window.addEventListener('resize', () => {
+            updateSnakePosition();
+            document.querySelectorAll('.snake').forEach((snake) => {
+                snake.animate([
+                    { width: `${canvas.offsetWidth / resolution}px`, height: `${canvas.offsetHeight / resolution}px`, margin: '0' }
+                ], {
+                    duration: 300,
+                    easing: 'cubic-bezier(.25,2,.52,1)',
+                    fill: 'forwards'
+                });
+            });
+        });
+
+        function spawnFood() {
+            if (isGameOver) return;
+            const foodPos = Math.floor(Math.random() * cellnum);
+            if (snakeTail.includes(foodPos) || foodPos === snakePos) {
+                spawnFood();
+                return;
+            }
+            document.querySelectorAll('.cell')[foodPos].className = 'cell food';
+            // setTimeout(() => {
+            //     spawnFood();
+            // }, Math.floor(Math.random() * 1000) + 500); // random ms from 500 to 1500
+        }
+
+        function toggleRetroDisplay(checked) {
+            if (checked) {
+                retroDisplay = true;
+                document.querySelectorAll('.cell').forEach((cell, index) => {
+                    if (index == snakePos && !(gameOver && !firstPlay)) cell.className = 'cell snakeCell';
+                });
+                document.querySelectorAll('.snake').forEach((snake) => {
+                    snake.style.opacity = 0;
+                });
+            } else {
+                document.querySelectorAll('.cell').forEach((cell) => {
+                    if (cell.className.includes('snakeCell') || cell.className.includes('dedSnejk')) cell.className = 'cell';
+                });
+                document.querySelectorAll('.snake').forEach((snake) => {
+                    snake.style.opacity = 1;
+                });
+                retroDisplay = false;
+            }
+        }
+
+        var optionsOpened = false;
+        function toggleOptions(button) {
+            const options = document.getElementById('options');
+            optionsOpened = !optionsOpened;
+            if (optionsOpened) {
+                button.innerText = 'close settings';
+                options.animate([
+                    { width: '0' },
+                    { width: '150px' }
+                ], {
+                    duration: 300,
+                    easing: 'cubic-bezier(.25,1,.52,1)',
+                    fill: 'forwards'
+                });
+            } else {
+                button.innerText = 'open settings';
+                options.animate([
+                    { width: '150px' },
+                    { width: '0' }
+                ], {
+                    duration: 300,
+                    easing: 'cubic-bezier(.25,1,.52,1)',
+                    fill: 'forwards'
+                });
+            }
+        }
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        canvas.addEventListener('touchstart', (event) => {
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+        });
+
+        canvas.addEventListener('touchmove', (event) => {
+            touchEndX = event.touches[0].clientX;
+            touchEndY = event.touches[0].clientY;
+        });
+
+        canvas.addEventListener('touchend', () => {
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0 && direction !== 2) {
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+                } else if (diffX < 0 && direction !== 3) {
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+                }
+            } else {
+                if (diffY > 0 && direction !== 0) {
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+                } else if (diffY < 0 && direction !== 1) {
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+                }
+            }
+        });
     </script>
 </body>
 </html>
