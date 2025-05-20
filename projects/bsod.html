@@ -461,7 +461,7 @@
         handleInputWithLocalStorage("titleC", (value) => {
             document.getElementById("title").textContent = value;
             if(value.includes('dobrze')) {
-                document.getElementById("title").style.fontSize = '1.5vh'; document.getElementById("title").style.width = '85vw';
+                document.getElementById("title").style.fontSize = '2.4vh'; document.getElementById("title").style.width = '80vw';
             } else {
                 document.getElementById("title").style.fontSize = ''; document.getElementById("title").style.width = '';
             }
@@ -469,7 +469,7 @@
         if(localStorage.getItem(titleC) == null || localStorage.getItem(titleC) == '') {
             document.getElementById("title").textContent = bsodTitles[Math.floor(Math.random() * bsodTitles.length)];
             if(document.getElementById("title").textContent.includes('dobrze')) {
-                document.getElementById("title").style.fontSize = '1.5vh'; document.getElementById("title").style.width = '85vw';
+                document.getElementById("title").style.fontSize = '2.4vh'; document.getElementById("title").style.width = '80vw';
             } else {
                 document.getElementById("title").style.fontSize = ''; document.getElementById("title").style.width = '';
             }
