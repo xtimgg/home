@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        * {
+            transition: 1s;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: black;
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(45deg, blue, purple);
+        }
+
+        h1 {
+            margin-top: -100px;
+        }
+
+        h3 {
+            margin-top: -15px;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 16px;
+            overflow: hidden;
+            padding-bottom: 12px;
+        }
+
+        .card {
+            width: calc(20px + 6vw);
+            height: 16vh;
+            display: inline-block;
+            padding: 40px;
+            margin: 0;
+            border: 1px solid #ffffff44;
+            transform: rotateY(180deg);
+            background-color: #0000001a;
+            text-align: center;
+            font-size: 0;
+            transition: all 1s 0s, font-size 0s .3s;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.307);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            user-select: none;
+        }
+
+        .card.selected {
+            transform: rotateY(0deg);
+            color: white;
+            font-size: 20px;
+            border: 1px solid #ffffff88;
+        }
+
+        .card.guessed {
+            border: 1px solid #00ff00;
+            background-color: #0e7c0088;
+            box-shadow: 0 0 4px #00ff00, 0 0 16px #00ff0086, 0 0 32px #00ff003d;
+            text-shadow: 0 0 4px #00ff00, 0 0 16px #00ff0086, 0 0 32px #00ff003d;
+            color: #00ff00;
+        }
+
+        #playAgain {
+            display: none;
+            color: white;
+            padding: 30px;
+            margin: 0;
+            border: 1px solid #ffffff44;
+            background-color: #0000001a;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.307);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            user-select: none;
+            scale: 0;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <h1>memory jakies fajne lol</h1>
+    <h3>liczba ruchów: </h3>
+    <br>
+    <main></main>
+    <button onclick="window.location.reload();" id="playAgain">zagraj ponownie czy cos</button>
+    
+    <script>
+        const cardTexts = ["🍕 Pizza", "🐱 Kot", "🚗 Auto", "🌵 Kaktus"];
+        let allCards = cardTexts.concat(cardTexts);
+        let alredyUsed = [];
+        for(i=0; i<allCards.length; i++) {
+            let index = Math.floor(Math.random()*8);
+            while(alredyUsed.includes(index) || index === 8) {
+                index = Math.round(Math.random()*8);
+            }
+            alredyUsed.push(index)
+            card = document.createElement('div');
+            card.className = "card";
+            card.id = "card" + index;
+            card.textContent = allCards[index];
+            card.setAttribute('onclick','cardClick(this.id)');
+
+            document.querySelector('main').append(card);
+        }
+
+        let secondReveal = false;
+        let cardbefore = null;
+        let moves = 0;
+        function cardClick(cardID) {
+            if(secondReveal) {
+                moves++;
+                document.querySelector('h3').textContent = `liczba ruchów: ${moves}`;
+            }
+            
+            let card = document.getElementById(cardID);
+
+            if (!secondReveal && cardbefore !== null) return;
+            if (card === cardbefore) return;
+            card.classList.add('selected');
+
+            if (secondReveal) {
+                if (cardbefore.textContent === card.textContent) {
+                    card.classList.add('guessed');
+                    cardbefore.classList.add('guessed');
+                    let _card = cardbefore;
+                    setTimeout(() => {
+                        card.style.opacity = '0';
+                        _card.style.opacity = '0';
+                    }, 1000);
+                    cardbefore = null;
+                } else {
+                    let _card = cardbefore;
+                    setTimeout(() => {
+                        card.classList.remove('selected');
+                        _card.classList.remove('selected');
+                        cardbefore = null;
+                    }, 1000);
+                }
+            } else {
+                cardbefore = card;
+            }
+            secondReveal = !secondReveal;
+            if(!document.querySelectorAll('.card:not(.guessed)')[0]) gameOver();
+        }
+
+        function gameOver() {
+            document.querySelector('h1').textContent = 'wygrałeś uwu';
+            document.querySelector('#playAgain').style.display = 'block';
+            document.querySelector('#playAgain').style.scale = '1';
+            document.querySelector('main').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
